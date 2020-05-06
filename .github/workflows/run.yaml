@@ -3,7 +3,10 @@ name: Run
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '00 15 * * *'
+    - cron:  '00 15 1 * *'
+  push:
+    branches: 
+      - master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
