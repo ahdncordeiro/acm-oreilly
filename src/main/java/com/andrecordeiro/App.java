@@ -5,7 +5,7 @@ package com.andrecordeiro;
 
 public class App {
     public String getGreeting() {
-        return "Hello world.";
+        return "Hello world, " + System.getenv("ACM_USERNAME") + ".";
     }
 
     public static void main(String[] args) {

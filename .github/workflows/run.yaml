@@ -31,3 +31,6 @@ jobs:
 
     - name: Run with Gradle
       run: ./gradlew run
+      env:
+        ACM_USERNAME: ${{ secrets.ACM_USERNAME }}
+        ACM_PASSWORD: ${{ secrets.ACM_PASSWORD }}
