@@ -29,8 +29,14 @@ jobs:
     - name: Clean with Gradle
       run: ./gradlew clean
 
+    - name: Download selenium web driver for firefox
+      run: curl -L https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz --output geckodriver-v0.26.0-linux64.tar.gz
+
+    - name: Extract selenium web driver for firefox from previous download
+      run: tar -xzf geckodriver-v0.26.0-linux64.tar.gz
+
     - name: Run with Gradle
-      run: ./gradlew run
+      run: ./gradlew run -Dwebdriver.gecko.driver=geckodriver
       env:
         ACM_USERNAME: ${{ secrets.ACM_USERNAME }}
         ACM_PASSWORD: ${{ secrets.ACM_PASSWORD }}

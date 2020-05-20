@@ -3,12 +3,26 @@
  */
 package com.andrecordeiro;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
 public class App {
     public String getGreeting() {
+        goToAcmLoginPage();
         return "Hello world, " + System.getenv("ACM_USERNAME") + ".";
+    }
+
+    private void goToAcmLoginPage() {
+        WebDriver driver = new FirefoxDriver();
+
+        driver.get("https://go.oreilly.com/acm");
+        System.out.println("current url "+driver.getCurrentUrl());
+
+        driver.quit();
     }
 
     public static void main(String[] args) {
         System.out.println(new App().getGreeting());
+//        System.exit(0);
     }
 }
