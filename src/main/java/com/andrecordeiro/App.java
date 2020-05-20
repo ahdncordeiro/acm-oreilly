@@ -3,30 +3,29 @@
  */
 package com.andrecordeiro;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
+
+import static java.lang.System.getenv;
 
 public class App {
-    public String getGreeting() {
-        goToAcmLoginPage();
-        return "Hello world, " + System.getenv("ACM_USERNAME") + ".";
-    }
-
-    private void goToAcmLoginPage() {
-        var options = new FirefoxOptions();
-        options.setHeadless(true);
-        var driver = new FirefoxDriver(options);
-
-        driver.get("https://go.oreilly.com/acm");
-        System.out.println("current url "+driver.getCurrentUrl());
-
-        driver.quit();
-    }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        var acm_username = getenv("ACM_USERNAME");
+        var acm_password = getenv("ACM_PASSWORD");
+
+        var webDriver = getWebDriver();
+
+        try {
+            new Service(acm_username, acm_password, webDriver).process();
+        } finally {
+            webDriver.quit();
+        }
+    }
+
+    private static FirefoxDriver getWebDriver() {
+        var options = new FirefoxOptions();
+        options.setHeadless(true);
+        return new FirefoxDriver(options);
     }
 }
