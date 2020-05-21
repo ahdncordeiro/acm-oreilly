@@ -12,17 +12,19 @@ import static org.mockito.Mockito.*;
 
 class ServiceTest {
     private WebDriver driver;
+    private Service service;
 
     @BeforeEach
     void beforeEach() {
         this.driver = Mockito.mock(WebDriver.class);
+        this.service = new Service("user","password", driver);
     }
 
     @Test
     void shouldGoToAcmLoginPage() throws Exception {
         when(driver.getCurrentUrl()).thenReturn("https://go.oreilly.com/acm");
 
-        invokeMethod(new Service("user","password", driver), true, "goToAcmPage");
+        invokeMethod(this.service, true, "goToAcmPage");
 
         verify(driver, times(1)).get("https://go.oreilly.com/acm");
     }
@@ -44,4 +46,14 @@ class ServiceTest {
         verify(passwordWebElement).sendKeys(password);
     }
 
+    @Test
+    void shouldSubmitLoginSuccessfully() throws Exception {
+        var signInButtonWebElement = mock(WebElement.class);
+        when(driver.findElement(By.name("_eventId_proceed"))).thenReturn(signInButtonWebElement);
+
+        invokeMethod(this.service, true, "signIn");
+
+        verify(driver).findElement(By.name("_eventId_proceed"));
+        verify(signInButtonWebElement).click();
+    }
 }

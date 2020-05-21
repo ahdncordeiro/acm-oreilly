@@ -7,6 +7,9 @@ import org.openqa.selenium.WebDriver;
 public class Service {
 
     private static final String OREILLY_ACM_LOGIN_URL = "https://go.oreilly.com/acm";
+    private static final String USERNAME_FIELD_ID = "username";
+    private static final String PASSWORD_FIELD_ID = "pword";
+    private static final String SIGN_IN_BUTTON_NAME = "_eventId_proceed";
 
     private String acm_username;
     private String acm_password;
@@ -21,15 +24,20 @@ public class Service {
     public void process() {
         goToAcmPage();
         fillUsernameAndPasswordFields();
-    }
-
-    private void fillUsernameAndPasswordFields() {
-        driver.findElement(By.id("username")).sendKeys(acm_username);
-        driver.findElement(By.id("pword")).sendKeys(acm_password);
+        signIn();
     }
 
     private void goToAcmPage() {
         driver.get(OREILLY_ACM_LOGIN_URL);
+    }
+
+    private void fillUsernameAndPasswordFields() {
+        driver.findElement(By.id(USERNAME_FIELD_ID)).sendKeys(acm_username);
+        driver.findElement(By.id(PASSWORD_FIELD_ID)).sendKeys(acm_password);
+    }
+
+    private void signIn() {
+        driver.findElement(By.name(SIGN_IN_BUTTON_NAME)).click();
     }
 
 }
