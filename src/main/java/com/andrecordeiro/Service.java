@@ -14,8 +14,6 @@ public class Service {
     private static final String USERNAME_FIELD_ID = "username";
     private static final String PASSWORD_FIELD_ID = "pword";
     private static final String SIGN_IN_BUTTON_NAME = "_eventId_proceed";
-    public static final String SUB_TITLE_MESSAGE_CLASS_NAME = "sub-title";
-    public static final String SUB_TITLE_MESSAGE = "ACM Account";
 
     private String acm_username;
     private String acm_password;
@@ -35,11 +33,9 @@ public class Service {
 
     private void goToAcmPage() {
         driver.get(OREILLY_ACM_LOGIN_URL);
-        new WebDriverWait(driver, SECONDS.toSeconds(20))
+        new WebDriverWait(driver, SECONDS.toSeconds(10))
                 .withMessage("Campos necessários presentes para o sign in não estão visíveis")
-                .until(and(presenceOfElementLocated(By.className(SUB_TITLE_MESSAGE_CLASS_NAME)),
-                        textToBePresentInElementValue(By.className(SUB_TITLE_MESSAGE_CLASS_NAME), SUB_TITLE_MESSAGE),
-                        presenceOfElementLocated(By.id(USERNAME_FIELD_ID)),
+                .until(and(presenceOfElementLocated(By.id(USERNAME_FIELD_ID)),
                         presenceOfElementLocated(By.id(PASSWORD_FIELD_ID)),
                         presenceOfElementLocated(By.name(SIGN_IN_BUTTON_NAME))));
     }
@@ -51,7 +47,7 @@ public class Service {
 
     private void signIn() {
         driver.findElement(By.name(SIGN_IN_BUTTON_NAME)).click();
-        new WebDriverWait(driver, SECONDS.toSeconds(20))
+        new WebDriverWait(driver, SECONDS.toSeconds(10))
                 .withMessage("Página não foi redirecionada para learning o'reilly")
                 .until(urlContains("learning.oreilly.com"));
     }

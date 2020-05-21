@@ -27,8 +27,6 @@ class ServiceTest {
     @Test
     void shouldGoToAcmLoginPage() throws Exception {
         var webElement = mock(WebElement.class);
-        when(driver.findElement(By.className("sub-title"))).thenReturn(webElement);
-        when(webElement.getAttribute("value")).thenReturn("ACM Account");
         when(driver.findElement(By.id("username"))).thenReturn(mock(WebElement.class));
         when(driver.findElement(By.id("pword"))).thenReturn(mock(WebElement.class));
         when(driver.findElement(By.name("_eventId_proceed"))).thenReturn(mock(WebElement.class));
@@ -36,7 +34,6 @@ class ServiceTest {
         invokeMethod(this.service, true, "goToAcmPage");
 
         verify(driver).get("https://go.oreilly.com/acm");
-        verify(driver, times(2)).findElement(By.className("sub-title"));
         verify(driver).findElement(By.id("username"));
         verify(driver).findElement(By.id("pword"));
         verify(driver).findElement(By.name("_eventId_proceed"));
@@ -54,7 +51,9 @@ class ServiceTest {
             Assertions.assertEquals(targetException.getClass(), TimeoutException.class);
             Assertions.assertTrue(targetException.getMessage().contains("Campos necessários presentes para o sign in não estão visíveis"), "Mensagem de erro errada");
             verify(driver).get("https://go.oreilly.com/acm");
-            verify(driver, atLeastOnce()).findElement(By.className("sub-title"));
+            verify(driver, atLeastOnce()).findElement(By.id("username"));
+            verify(driver, never()).findElement(By.id("pword"));
+            verify(driver, never()).findElement(By.name("_eventId_proceed"));
         }
     }
 
