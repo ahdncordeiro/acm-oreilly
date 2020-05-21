@@ -1,11 +1,15 @@
 package com.andrecordeiro;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import java.lang.reflect.InvocationTargetException;
 
 import static org.apache.commons.lang3.reflect.MethodUtils.invokeMethod;
 import static org.mockito.Mockito.*;
@@ -22,11 +26,36 @@ class ServiceTest {
 
     @Test
     void shouldGoToAcmLoginPage() throws Exception {
-        when(driver.getCurrentUrl()).thenReturn("https://go.oreilly.com/acm");
+        var webElement = mock(WebElement.class);
+        when(driver.findElement(By.className("sub-title"))).thenReturn(webElement);
+        when(webElement.getAttribute("value")).thenReturn("ACM Account");
+        when(driver.findElement(By.id("username"))).thenReturn(mock(WebElement.class));
+        when(driver.findElement(By.id("pword"))).thenReturn(mock(WebElement.class));
+        when(driver.findElement(By.name("_eventId_proceed"))).thenReturn(mock(WebElement.class));
 
         invokeMethod(this.service, true, "goToAcmPage");
 
-        verify(driver, times(1)).get("https://go.oreilly.com/acm");
+        verify(driver).get("https://go.oreilly.com/acm");
+        verify(driver, times(2)).findElement(By.className("sub-title"));
+        verify(driver).findElement(By.id("username"));
+        verify(driver).findElement(By.id("pword"));
+        verify(driver).findElement(By.name("_eventId_proceed"));
+    }
+
+    @Test
+    void shouldGoToAcmLoginPageFailsForNotFindingElement() throws Exception {
+
+        try {
+            invokeMethod(this.service, true, "goToAcmPage");
+            Assertions.fail("Should have thrown an exception");
+
+        } catch (InvocationTargetException e) {
+            var targetException = e.getTargetException();
+            Assertions.assertEquals(targetException.getClass(), TimeoutException.class);
+            Assertions.assertTrue(targetException.getMessage().contains("Campos necessários presentes para o sign in"), "Mensagem de erro errada");
+            verify(driver).get("https://go.oreilly.com/acm");
+            verify(driver, atLeastOnce()).findElement(By.className("sub-title"));
+        }
     }
 
     @Test
