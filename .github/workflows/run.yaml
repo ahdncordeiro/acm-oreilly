@@ -4,9 +4,6 @@ on:
   schedule:
     # * is a special character in YAML so you have to quote this string
     - cron:  '00 15 1 * *'
-  push:
-    branches: 
-      - master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -28,9 +25,6 @@ jobs:
 
     - name: Clean with Gradle
       run: ./gradlew clean
-
-    - name: Execute tests
-      run: ./gradlew test
 
     - name: Download selenium web driver for firefox
       run: curl -L https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz --output geckodriver-v0.26.0-linux64.tar.gz
