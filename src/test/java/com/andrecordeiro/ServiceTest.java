@@ -52,7 +52,7 @@ class ServiceTest {
         } catch (InvocationTargetException e) {
             var targetException = e.getTargetException();
             Assertions.assertEquals(targetException.getClass(), TimeoutException.class);
-            Assertions.assertTrue(targetException.getMessage().contains("Campos necessários presentes para o sign in"), "Mensagem de erro errada");
+            Assertions.assertTrue(targetException.getMessage().contains("Campos necessários presentes para o sign in não estão visíveis"), "Mensagem de erro errada");
             verify(driver).get("https://go.oreilly.com/acm");
             verify(driver, atLeastOnce()).findElement(By.className("sub-title"));
         }
@@ -79,10 +79,30 @@ class ServiceTest {
     void shouldSubmitLoginSuccessfully() throws Exception {
         var signInButtonWebElement = mock(WebElement.class);
         when(driver.findElement(By.name("_eventId_proceed"))).thenReturn(signInButtonWebElement);
+        when(driver.getCurrentUrl()).thenReturn("learning.oreilly.com");
 
         invokeMethod(this.service, true, "signIn");
 
         verify(driver).findElement(By.name("_eventId_proceed"));
         verify(signInButtonWebElement).click();
+        verify(driver, atLeastOnce()).getCurrentUrl();
+    }
+
+    @Test
+    void shouldSubmitLoginFailsAfterTimeout() throws Exception {
+        var signInButtonWebElement = mock(WebElement.class);
+        when(driver.findElement(By.name("_eventId_proceed"))).thenReturn(signInButtonWebElement);
+
+        try {
+            invokeMethod(this.service, true, "signIn");
+            Assertions.fail("Should have thrown an exception");
+
+        } catch (InvocationTargetException e) {
+            var targetException = e.getTargetException();
+            Assertions.assertEquals(targetException.getClass(), TimeoutException.class);
+            Assertions.assertTrue(targetException.getMessage().contains("Página não foi redirecionada para learning o'reilly"), "Mensagem de erro errada");
+            verify(driver).findElement(By.name("_eventId_proceed"));
+            verify(driver, atLeastOnce()).getCurrentUrl();
+        }
     }
 }

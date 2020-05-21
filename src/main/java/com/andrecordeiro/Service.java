@@ -35,8 +35,8 @@ public class Service {
 
     private void goToAcmPage() {
         driver.get(OREILLY_ACM_LOGIN_URL);
-        new WebDriverWait(driver, SECONDS.toSeconds(5))
-                .withMessage("Campos necessários presentes para o sign in")
+        new WebDriverWait(driver, SECONDS.toSeconds(10))
+                .withMessage("Campos necessários presentes para o sign in não estão visíveis")
                 .until(and(presenceOfElementLocated(By.className(SUB_TITLE_MESSAGE_CLASS_NAME)),
                         textToBePresentInElementValue(By.className(SUB_TITLE_MESSAGE_CLASS_NAME), SUB_TITLE_MESSAGE),
                         presenceOfElementLocated(By.id(USERNAME_FIELD_ID)),
@@ -51,6 +51,9 @@ public class Service {
 
     private void signIn() {
         driver.findElement(By.name(SIGN_IN_BUTTON_NAME)).click();
+        new WebDriverWait(driver, SECONDS.toSeconds(10))
+                .withMessage("Página não foi redirecionada para learning o'reilly")
+                .until(urlContains("learning.oreilly.com"));
     }
 
 }
