@@ -1,6 +1,7 @@
 package com.andrecordeiro;
 
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class Service {
@@ -18,7 +19,17 @@ public class Service {
     }
 
     public void process() {
-            driver.get(OREILLY_ACM_LOGIN_URL);
-            System.out.println("current url " + driver.getCurrentUrl());
+        goToAcmPage();
+        fillUsernameAndPasswordFields();
     }
+
+    private void fillUsernameAndPasswordFields() {
+        driver.findElement(By.id("username")).sendKeys(acm_username);
+        driver.findElement(By.id("pword")).sendKeys(acm_password);
+    }
+
+    private void goToAcmPage() {
+        driver.get(OREILLY_ACM_LOGIN_URL);
+    }
+
 }
