@@ -8,3 +8,4 @@
 </p>
 
 # acm-oreilly
+To manually trigger the action, star the repository.
